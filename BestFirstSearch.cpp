@@ -29,6 +29,17 @@ struct item{
   double ratio; //profit/weight ratio
 };
 vector<item> items;
+item blank;
+blank.profit = 0;
+blank.weight = 0;
+blank.ratio = 0;
+items.push_back(blank);
+Node first;
+first.level = 0;
+first.profit = 0;
+first.weight = 0;
+first.bound = 0;
+first.items_used = items;
 void sort_items(){//bubble sort this array based on ratio
   for(int i = 0; i<items.size();i++){
     for(int j = 0;j<items.size();j++){
@@ -87,8 +98,11 @@ int main(int argc, char * argv[]){
     my_item.ratio = my_item.profit/my_item.weight;
     items.push_back(my_item);
   }
+  sort_items();//performs the bubble sort
+
+
   //for debug:
-  std::cout<<"-------ITEMS-------"<<endl;
+/*  std::cout<<"-------ITEMS-------"<<endl;
   for(int i=0;i<items.size();i++){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
@@ -96,5 +110,5 @@ int main(int argc, char * argv[]){
   std::cout<<"-------SORTED-------"<<endl;
   for(int i = 0; i<items.size();i++){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
-  }
+  }*/
 }
