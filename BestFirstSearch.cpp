@@ -29,21 +29,11 @@ struct item{
   double ratio; //profit/weight ratio
 };
 vector<item> items;
-/*item blank;
-blank.profit = 0;
-blank.weight = 0;
-blank.ratio = 0;
-items.push_back(blank);
-Node first;
-first.level = 0;
-first.profit = 0;
-first.weight = 0;
-first.bound = 0;
-first.items_used = items;*/
+
 void sort_items(){//bubble sort this array based on ratio
   for(int i = 1; i<items.size();i++){
     for(int j = 1;j<items.size();j++){
-      if (items[j].ratio> items[j+1].ratio){
+      if (items[j].ratio< items[j+1].ratio){
         item temp = items[j];
         items[j] = items[j+1];
         items[j+1] = temp;
@@ -85,14 +75,14 @@ int main(int argc, char * argv[]){
   blank.profit = 0;
   blank.weight = 0;
   blank.ratio = 0;
-  //items.push_back(blank);
+  items.push_back(blank);
   //constructing root node:
   Node root;
   root.level = -1;
   root.profit = 0;
   root.weight = 0;
   root.bound = calculate_bound(root);
-  cout<<"Root bound: "<<root.bound<<endl;
+  //cout<<"Root bound: "<<root.bound<<endl;
   root.items_used.push_back(0);
   best_node = root;
   ifstream infile(argv[1]); //input file
@@ -113,13 +103,16 @@ int main(int argc, char * argv[]){
     my_item.profit = stoi(temp.substr(comma+1)); //sets the profit based on input
     my_item.ratio = my_item.profit/my_item.weight;
     items.push_back(my_item);
+
   }
+
 
   sort_items();//performs the bubble sort
   my_queue.push(root); //enqueue dummy node
   int nodes_visited = 0;
   //cout<<"got to this point"<<endl;
-  /*while (!my_queue.empty()){
+  while (!my_queue.empty()){
+    //cout<<my_queue.top().bound<<endl;
     Node current = my_queue.top();
     my_queue.pop();
     Node next;
@@ -144,11 +137,12 @@ int main(int argc, char * argv[]){
     if (next.bound>next.profit){
       my_queue.push(next);
     }
-  }*/
+
+  }
 
 
   //for debug:
- std::cout<<"-------ITEMS-------"<<endl;
+ /*std::cout<<"-------ITEMS-------"<<endl;
   for(int i=0;i<items.size();i++){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
@@ -158,4 +152,5 @@ int main(int argc, char * argv[]){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
   std::cout<<"max profit: "<<best_node.profit<<endl;
+}*/
 }
