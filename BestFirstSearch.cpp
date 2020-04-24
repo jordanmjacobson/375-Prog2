@@ -57,7 +57,7 @@ int calculate_bound(Node my_node){ //to be used for priority queue comparison
   }
   int weight_used = my_node.weight; //weight already in the bag
   long retVal = my_node.profit;
-  for (long i = my_node.level; i<items.size();i++){
+  for (long i = my_node.level+1; i<items.size();i++){
     if (weight_used < capacity){
       if(weight_used+items[i].weight<=capacity){
         retVal+= items[i].profit;
@@ -91,7 +91,8 @@ int main(int argc, char * argv[]){
   root.level = -1;
   root.profit = 0;
   root.weight = 0;
-  root.bound = 0;
+  root.bound = calculate_bound(root);
+  cout<<"Root bound: "<<root.bound<<endl;
   root.items_used.push_back(0);
   best_node = root;
   ifstream infile(argv[1]); //input file
@@ -104,7 +105,7 @@ int main(int argc, char * argv[]){
   string temp; //contains the profit and weight of ith item*/
   item my_item; //item to be added to vector of items
 
-  items.push_back(blank);
+  //items.push_back(blank);
   for (int i = 0;i<num_items; i++){
     infile >> temp;
     comma = temp.find(","); //re-using from when it was first declared above
@@ -118,7 +119,7 @@ int main(int argc, char * argv[]){
   my_queue.push(root); //enqueue dummy node
   int nodes_visited = 0;
   //cout<<"got to this point"<<endl;
-  while (!my_queue.empty()){
+  /*while (!my_queue.empty()){
     Node current = my_queue.top();
     my_queue.pop();
     Node next;
@@ -143,7 +144,7 @@ int main(int argc, char * argv[]){
     if (next.bound>next.profit){
       my_queue.push(next);
     }
-  }
+  }*/
 
 
   //for debug:
