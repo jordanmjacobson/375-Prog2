@@ -116,18 +116,19 @@ int main(int argc, char * argv[]){
     Node current = my_queue.top();
     my_queue.pop();
     Node next;
-
-
     //cout<<"bound: "<<next.bound<<endl;
     if(current.bound >max_profit){
       next.level = current.level+1;
       next.profit = current.profit+items[next.level].profit;
-      next.weight = current.weight + items[next.level].profit;
+      next.weight = current.weight + items[next.level].weight;
       next.bound = calculate_bound(next);
 
-      if (next.weight <= capacity&& next.bound > max_profit){ //if the node is promising
+      if (next.weight <= capacity&& next.profit > max_profit){ //if the node is promising
         best_node = next;
+        //cout<<next.profit<<","<<best_node.profit<<endl;
         max_profit = best_node.profit;
+      }
+      if (next.bound >max_profit){
         my_queue.push(next);
         continue;
 
@@ -156,5 +157,5 @@ int main(int argc, char * argv[]){
   for(int i = 0; i<items.size();i++){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
-  std::cout<<"max profit: "<<best_node.profit<<endl;
+  std::cout<<"max profit: "<<max_profit<<endl;
 }
