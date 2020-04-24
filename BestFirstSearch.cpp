@@ -116,21 +116,26 @@ int main(int argc, char * argv[]){
     Node current = my_queue.top();
     my_queue.pop();
     Node next;
-    next.level = current.level+1;
-    next.profit = current.profit+items[next.level].profit;
-    next.weight = current.weight + items[next.level].profit;
-    next.bound = calculate_bound(next);
-    //cout<<"bound: "<<next.bound<<endl;
-    if (next.weight <= capacity&& next.bound > max_profit){ //if the node is promising
-      best_node = next;
-      max_profit = best_node.profit;
-      my_queue.push(next);
-      continue;
 
+
+    //cout<<"bound: "<<next.bound<<endl;
+    if(current.bound >max_profit){
+      next.level = current.level+1;
+      next.profit = current.profit+items[next.level].profit;
+      next.weight = current.weight + items[next.level].profit;
+      next.bound = calculate_bound(next);
+
+      if (next.weight <= capacity&& next.bound > max_profit){ //if the node is promising
+        best_node = next;
+        max_profit = best_node.profit;
+        my_queue.push(next);
+        continue;
+
+      }
     }
 
     next.items_used.push_back(next.level);
-    next.level = current.level;
+    next.level = current.level+1;
     next.profit = current.profit;
     next.weight = current.weight;
     next.bound = calculate_bound(next);
@@ -142,7 +147,7 @@ int main(int argc, char * argv[]){
 
 
   //for debug:
- /*std::cout<<"-------ITEMS-------"<<endl;
+ std::cout<<"-------ITEMS-------"<<endl;
   for(int i=0;i<items.size();i++){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
@@ -152,5 +157,4 @@ int main(int argc, char * argv[]){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
   std::cout<<"max profit: "<<best_node.profit<<endl;
-}*/
 }
