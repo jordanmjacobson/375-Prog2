@@ -130,7 +130,7 @@ int main(int argc, char * argv[]){
       }
       if (next.bound >max_profit){
         my_queue.push(next);
-        continue;
+        //continue;
 
       }
     }
