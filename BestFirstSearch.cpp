@@ -12,6 +12,7 @@ struct  Node{ //represents algorithm state
   long weight; // total weight from all items in this state
   long bound; // the bound for branch and bound algorithm
   vector<int> items_used;
+  bool taken;
 };
 struct CompareBound{ //implementation of comparator overload
   bool operator()(const Node& n1, const Node& n2){
@@ -69,7 +70,7 @@ int calculate_bound(Node my_node){ //to be used for priority queue comparison
 int main(int argc, char * argv[]){
   int max_profit = 0;
   Node best_node;
-  int leaves;
+  int leaves = 0;
   //constructing blank item for root node:
   item blank;
   blank.profit = 0;
@@ -82,7 +83,6 @@ int main(int argc, char * argv[]){
   root.profit = 0;
   root.weight = 0;
   root.bound = calculate_bound(root);
-  //cout<<"Root bound: "<<root.bound<<endl;
   root.items_used.push_back(0);
   best_node = root;
   ifstream infile(argv[1]); //input file
@@ -91,11 +91,9 @@ int main(int argc, char * argv[]){
   size_t comma = first.find(","); //the comma delimiter. Will be recycled later...
   num_items = stoi(first.substr(0,comma));
   capacity =  stoi(first.substr(comma+1));
-  //std::cout<<"# of items: "<<num_items<<", capacity: "<<capacity<<endl;
   string temp; //contains the profit and weight of ith item*/
   item my_item; //item to be added to vector of items
 
-  //items.push_back(blank);
   for (int i = 0;i<num_items; i++){
     infile >> temp;
     comma = temp.find(","); //re-using from when it was first declared above
@@ -109,40 +107,50 @@ int main(int argc, char * argv[]){
 
   sort_items();//performs the bubble sort
   my_queue.push(root); //enqueue dummy node
-  int nodes_visited = 0;
-  //cout<<"got to this point"<<endl;
+  int nodes_visited = 0; //starts at one becaue of the root? (assuming we count the root)
   while (!my_queue.empty()){
-    //cout<<my_queue.top().bound<<endl;
     Node current = my_queue.top();
     my_queue.pop();
+    nodes_visited++;
+    //nodes_visited++;
     Node next;
-    //cout<<"bound: "<<next.bound<<endl;
-    if(current.bound >max_profit){
+    if(current.bound >max_profit){ //item added to knapsack
       next.level = current.level+1;
       next.profit = current.profit+items[next.level].profit;
       next.weight = current.weight + items[next.level].weight;
       next.bound = calculate_bound(next);
+      next.taken = true;
+      //next.items_used = current.items_used;
+
 
       if (next.weight <= capacity&& next.profit > max_profit){ //if the node is promising
         best_node = next;
-        //cout<<next.profit<<","<<best_node.profit<<endl;
         max_profit = best_node.profit;
+        best_node.items_used = current.items_used;
+        best_node.items_used.push_back(next.level);
+      }
+      else{
+        //best_node.items_used.pop_back();
+        next.taken = false;
+        leaves++;
       }
       if (next.bound >max_profit){
         my_queue.push(next);
-        //continue;
-
       }
     }
-
-    next.items_used.push_back(next.level);
+    else{
+      leaves++;
+    }
     next.level = current.level+1;
     next.profit = current.profit;
     next.weight = current.weight;
     next.bound = calculate_bound(next);
+    next.items_used.push_back(next.level);
     if (next.bound>next.profit){
       my_queue.push(next);
+
     }
+
 
   }
 
@@ -158,4 +166,9 @@ int main(int argc, char * argv[]){
     cout<<"("<<items[i].weight<<","<<items[i].profit<<")"<<endl;
   }
   std::cout<<"max profit: "<<max_profit<<endl;
+  std::cout<<"nodes visited: "<<nodes_visited<<endl;
+  std::cout<<"items used: "<<endl;
+  cout<<"Leaves: "<<leaves<<endl;
+  for(int i = 0; i<best_node.items_used.size();i++)
+  cout<<"("<<items[best_node.items_used[i]].weight<<","<<items[best_node.items_used[i]].profit<<")"<<endl;
 }
